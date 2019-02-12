@@ -112,8 +112,31 @@ end
 --[[ This function is executed at each time step
 It must contain the logic of your controller ]]
 function step()
-    -- call the koining function
-    joinBlack()
+    -- getMeanDistance
+    dist = 0
+    for i = 1,#robot.colored_blob_omnidirectional_camera do
+        dist = dist + robot.colored_blob_omnidirectional_camera[i].distance
+        meanDist = dist/#robot.colored_blob_omnidirectional_camera
+        --  log("angle" .. math.deg(robot.colored_blob_omnidirectional_camera[i].angle))
+    end
+
+    --avoid while going in the direction and go around if not on black
+    if (meanDist >= 10) then
+        joinBlack()
+    else
+        floor = getFloor(0)
+        if ( floor == 0 ) then
+            if count < 4 then
+                count = count + 1
+                robot.wheels.set_velocity(0,0)
+                robot.leds.set_single_color(13, "red")
+            end
+        elseif (floor < 0) && (floor <= 2) then
+            --chopper l'angle et le faire aller dans le bon sens (line follow) et stopper quand capteur interne ok
+        elseif (floor > 2) then
+            --gauche ou droite et inverse après avec test de distance
+        end
+    end
 end
 
 
